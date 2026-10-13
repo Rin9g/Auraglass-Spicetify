@@ -1,0 +1,1361 @@
+/* ==========================================================================
+   AuraGlass Theme for Spicetify
+   - Semi-transparent frosted white glassmorphic panels with distinct borders
+   - Dynamic continuous animated gradient album background
+   - Fully synchronized playlist & main-view background
+   - Clean, elegant playback and action buttons (no boxed shuffle button)
+   - Official Marketplace topbar navigation integration (single button)
+   - Fullscreen & Cinema lyrics transparent backdrop with white text
+   - Real-time lyrics karaoke progress wipe in black tracking sung duration
+   ========================================================================== */
+
+@property --aura-color-primary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #8a7aa6;
+}
+
+@property --aura-color-secondary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #5b7596;
+}
+
+@property --aura-color-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #a56ca0;
+}
+
+@property --aura-color-dark {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0a0a0f;
+}
+
+:root {
+  --aura-color-primary: #8a7aa6;
+  --aura-color-secondary: #5b7596;
+  --aura-color-accent: #a56ca0;
+  --aura-color-dark: #0a0a0f;
+  
+  /* Frosted White Translucent Glass Variables */
+  --aura-glass-bg: rgba(255, 255, 255, 0.08);
+  --aura-glass-border: rgba(255, 255, 255, 0.16);
+  --aura-glass-border-hover: rgba(255, 255, 255, 0.35);
+  --aura-glass-button-bg: rgba(255, 255, 255, 0.10);
+  --aura-glass-button-hover: rgba(255, 255, 255, 0.22);
+  --aura-card-bg: rgba(255, 255, 255, 0.06);
+  --aura-card-border: rgba(255, 255, 255, 0.12);
+  --aura-radius-sm: 8px;
+  --aura-radius-md: 12px;
+  --aura-radius-lg: 16px;
+  --aura-radius-pill: 9999px;
+  
+  --aura-lyrics-progress: 0%;
+  --aura-beam-opacity: 1;
+
+  transition: --aura-color-primary 1.8s ease, --aura-color-secondary 1.8s ease, --aura-color-accent 1.8s ease, --aura-color-dark 1.8s ease;
+}
+
+/* ==========================================================================
+   1. Dynamic Living Gradient Background Container
+   ========================================================================== */
+#aura-background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--aura-color-dark);
+  transition: background-color 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aura-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px) saturate(180%);
+  opacity: 0.85;
+  will-change: transform, opacity;
+  transition: background 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Four fluid moving blobs mixing harmoniously */
+.aura-blob-1 {
+  width: 80vw;
+  height: 80vh;
+  top: -25%;
+  left: -20%;
+  background: radial-gradient(circle, var(--aura-color-primary) 0%, transparent 70%);
+  animation: aura-drift-1 24s infinite alternate ease-in-out;
+}
+
+.aura-blob-2 {
+  width: 75vw;
+  height: 75vh;
+  bottom: -20%;
+  right: -20%;
+  background: radial-gradient(circle, var(--aura-color-secondary) 0%, transparent 70%);
+  animation: aura-drift-2 30s infinite alternate ease-in-out;
+}
+
+.aura-blob-3 {
+  width: 70vw;
+  height: 70vh;
+  top: 25%;
+  left: 20%;
+  background: radial-gradient(circle, var(--aura-color-accent) 0%, transparent 70%);
+  animation: aura-drift-3 20s infinite alternate ease-in-out;
+}
+
+.aura-blob-4 {
+  width: 60vw;
+  height: 60vh;
+  bottom: 5%;
+  left: -15%;
+  background: radial-gradient(circle, var(--aura-color-primary) 0%, transparent 65%);
+  animation: aura-drift-4 26s infinite alternate ease-in-out;
+}
+
+/* Rotating overlay wash for continuous subtle color metamorphosis */
+.aura-gradient-overlay {
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(255, 255, 255, 0.03) 60deg,
+    transparent 120deg,
+    rgba(255, 255, 255, 0.04) 240deg,
+    transparent 360deg
+  );
+  animation: aura-rotate-slow 50s infinite linear;
+  pointer-events: none;
+}
+
+/* Noise overlay for velvety high-end finish */
+.aura-grain-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 0);
+  background-size: 4px 4px;
+  pointer-events: none;
+}
+
+@keyframes aura-drift-1 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(14vw, 10vh) scale(1.15) rotate(90deg); }
+  100% { transform: translate(-6vw, 16vh) scale(0.9) rotate(180deg); }
+}
+
+@keyframes aura-drift-2 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(-12vw, -14vh) scale(1.2) rotate(-90deg); }
+  100% { transform: translate(8vw, -6vh) scale(0.85) rotate(-180deg); }
+}
+
+@keyframes aura-drift-3 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  33% { transform: translate(-10vw, 12vh) scale(1.25) rotate(60deg); }
+  66% { transform: translate(14vw, -8vh) scale(0.9) rotate(120deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes aura-drift-4 {
+  0% { transform: translate(0, 0) scale(0.95); }
+  50% { transform: translate(16vw, -12vh) scale(1.2); }
+  100% { transform: translate(0, 0) scale(0.95); }
+}
+
+@keyframes aura-rotate-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   2. Translucent Frosted White Glassmorphism & Defined Frame Borders
+   ========================================================================== */
+
+/* Make Spotify root containers transparent to reveal dynamic gradient background */
+html,
+body,
+#main,
+.Root,
+.Root__top-container,
+.spotify__container--is-desktop,
+.bokji1jrN2MBe7RA0384 {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Left Sidebar (Library) */
+.Root__nav-bar,
+.bQsutxbyIOatthweRHfK,
+[data-testid="left-sidebar"],
+#Desktop_LeftSidebar_Id,
+.wS8WRtgpp8hCpDALPMTR {
+  background-color: var(--aura-glass-bg) !important;
+  backdrop-filter: blur(28px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-md) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Remove nested backgrounds inside Left Sidebar */
+.main-yourLibraryX-entryPoints,
+.main-yourLibraryX-library,
+.main-yourLibraryX-header,
+.YourLibraryX,
+#Desktop_LeftSidebar_Id .YourLibraryX,
+#Desktop_LeftSidebar_Id .sLuHYeDTjzxOqDrUMe7I,
+#Desktop_LeftSidebar_Id .fzHPhMo0kcyncLiwFUUZ,
+#Desktop_LeftSidebar_Id .Qy_WSh1_WDxGQscQPBGl,
+#Desktop_LeftSidebar_Id .r7tdTvZfi3qFu7gH7fQ5,
+#Desktop_LeftSidebar_Id nav,
+#Desktop_LeftSidebar_Id nav > div,
+#Desktop_LeftSidebar_Id .Yp3YJJf7sEsbrbtr94Av,
+#Desktop_LeftSidebar_Id .EPNxTzIQFLr0RhT_L1nx,
+#Desktop_LeftSidebar_Id .OxcpGT2yLq52q4F4aiCr,
+.WWTxshVPO07BZLrdUL3h,
+.jpHQLr33ZT5pJGBVFmjJ,
+.miQxkQPT6ObnldFON6FU,
+.b0kbWFp7K9_JqU7W7FqI,
+.wuAdcQqNfjsOEgHrgxpT,
+.gMTqy05mBQbruCzWCpPL,
+.LW65PWOOw5TvoMyBAMPF,
+.bMFN84LqjGCw2G4qXd6U,
+.jp9OPpCpqZJWybMQQCX2,
+.Ws7E1RxAV7lcRK8VokDE,
+.ZerbJYyhS0yvCyAvRiGd,
+.I2aoV46rpCN4PpPXyG97,
+.oA2xvck_WSZn6mRFcZ2J {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Main View Panel */
+.Root__main-view,
+.bTgBWvuzt0s_dQWLj2OL,
+#main-view,
+.kqeAXHJzFfJ_27frg58J {
+  background-color: var(--aura-glass-bg) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-md) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Ensure inner main view container has no duplicate borders or backgrounds */
+.main-view-container,
+#main-view .main-view-container {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Add bottom padding to scroll node so contents are never hidden behind player bar */
+.main-view-container__scroll-node-child,
+#main-view .main-view-container__scroll-node-child {
+  padding-bottom: 120px !important;
+}
+
+/* Right Sidebar (Now Playing View / Friend Activity / Lyrics) */
+.Root__right-sidebar,
+.AOAgML4d2nmdGZhmu3QM,
+aside#Desktop_PanelContainer_Id,
+._PCtpBj8KAibsMRyofjJ,
+.tDwxpCRHu3TEG0d_5KfE,
+.iZl4hCeW2xyCCK5nSCCL {
+  background-color: var(--aura-glass-bg) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-md) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Ensure all intermediate layout wrappers in right sidebar are 100% transparent */
+.AOAgML4d2nmdGZhmu3QM,
+.AOAgML4d2nmdGZhmu3QM *,
+aside#Desktop_PanelContainer_Id,
+aside#Desktop_PanelContainer_Id *,
+[data-npv-root="true"],
+[data-npv-root="true"] * {
+  --background-base: transparent !important;
+  --background-highlight: transparent !important;
+  --background-elevated-base: transparent !important;
+  --background-elevated-highlight: transparent !important;
+  --background-press: transparent !important;
+}
+
+aside#Desktop_PanelContainer_Id .XeqBm1GdRr1BjUb_oOqw,
+aside#Desktop_PanelContainer_Id .Zh3rQRncNEHrT9Zvp61n,
+aside#Desktop_PanelContainer_Id .DBjkmt00l0_lLuWgHzXL,
+aside#Desktop_PanelContainer_Id .xg2bGi5tcuelbx14UC28,
+aside#Desktop_PanelContainer_Id .y6OKifI7z4sW24WtUOtl,
+aside#Desktop_PanelContainer_Id main,
+aside#Desktop_PanelContainer_Id section,
+.AOAgML4d2nmdGZhmu3QM aside,
+.AOAgML4d2nmdGZhmu3QM .gah5O0fYgkGMZLdwy_g5,
+.AOAgML4d2nmdGZhmu3QM .we54Ymy6Ql2swvJVnuvi,
+.AOAgML4d2nmdGZhmu3QM .D0qWErHdvHknfXqr6zOl,
+.AOAgML4d2nmdGZhmu3QM .THkMJ1bnCmatvnJALZkH,
+.AOAgML4d2nmdGZhmu3QM .RdD6POf8qaaGutBtUyMh,
+.AOAgML4d2nmdGZhmu3QM .iiR6n0DX0oZ32dohbXPw,
+.AOAgML4d2nmdGZhmu3QM .Gl1sGcEc2vIDXN_25edM,
+.AOAgML4d2nmdGZhmu3QM .EV8c1_8Z1GJmQiNzFeua,
+.AOAgML4d2nmdGZhmu3QM .cHUvLavn3Nlh8wUijhbZ,
+.AOAgML4d2nmdGZhmu3QM .WosRx6NbfxOIFkdobeyk,
+.AOAgML4d2nmdGZhmu3QM .t6Jwud2fkYyUBTi8RqaT,
+.AOAgML4d2nmdGZhmu3QM .cJEteeBwib4YLtCIJ1bM,
+.AOAgML4d2nmdGZhmu3QM .miQxkQPT6ObnldFON6FU,
+.AOAgML4d2nmdGZhmu3QM .kIdwlYLsDCgBSpsfutG6,
+.AOAgML4d2nmdGZhmu3QM .AfKmrZ306qeQTbYQfwLc,
+.AOAgML4d2nmdGZhmu3QM .BGdcsJhkf4JOCIGu5one,
+.AOAgML4d2nmdGZhmu3QM .p0UCDR70bGAS2xsqZuTq,
+.AOAgML4d2nmdGZhmu3QM .Z13iYQYK741oZFGrOjGx,
+.AOAgML4d2nmdGZhmu3QM main,
+.AOAgML4d2nmdGZhmu3QM section {
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Right Sidebar internal cards (Lyrics, About Artist, Credits, Next in Queue) - Frosted Glass Cards */
+.AOAgML4d2nmdGZhmu3QM .yanzBsLcAL8wDzLb8QrU,
+.AOAgML4d2nmdGZhmu3QM .w_63eGohnNUi98P84l_b,
+.AOAgML4d2nmdGZhmu3QM [data-testid="now-playing-widget"],
+aside#Desktop_PanelContainer_Id [data-testid="lyrics-npv-section"],
+aside#Desktop_PanelContainer_Id ._5r5Z5L6ZrkTUa8r_fxps,
+[data-npv-root="true"] [data-testid="lyrics-npv-section"],
+[data-npv-root="true"] section {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: var(--aura-radius-md) !important;
+}
+
+/* Top Navigation Bar */
+.Root__globalNav,
+.main-topBar-container,
+#global-nav-bar,
+.rLb4jRJmAjuDMN1b9Atw {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+  position: relative !important;
+  z-index: 99 !important;
+}
+
+/* Ensure search bar in topbar is always visible, sized properly and text never clipped */
+.Root__globalNav .DX19zcoy_x5BT6oCo3aO,
+#global-nav-bar .EVxI9tvqHU3_c7FznlgM {
+  display: flex !important;
+  visibility: visible !important;
+  flex: 1 1 auto !important;
+}
+
+#global-nav-bar form {
+  display: block !important;
+  width: 100% !important;
+  max-width: 480px !important;
+}
+
+#global-nav-bar form .H6RzjbtGlwWwr5Ul4wf5 {
+  width: 100% !important;
+}
+
+#global-nav-bar input[type="search"],
+#global-nav-bar input {
+  width: 100% !important;
+  color: #ffffff !important;
+}
+
+/* Bottom Player Bar Layout Wrapper (Transparent to prevent ghost frames) */
+.Root__now-playing-bar,
+.z0qdvwslOFVOAihShLIq,
+.L5dM7nzQpMJtRkvZZBZL {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Floating Glass Player Bar */
+.main-nowPlayingBar-container,
+.n6XE6JL2UDeFogzbLcNC,
+aside[data-testid="now-playing-bar"],
+footer[data-testid="now-playing-bar"] {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: var(--aura-radius-lg) !important;
+  margin: 4px 10px 8px 10px !important;
+  box-shadow: 0 10px 36px 0 rgba(0, 0, 0, 0.3) !important;
+  transition: opacity 0.35s ease, visibility 0.35s ease !important;
+}
+
+/* Player Bar Left Track Info & Add Button Tight Integration */
+.main-nowPlayingBar-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  justify-content: flex-start !important;
+}
+
+.main-nowPlayingBar-left .main-nowPlayingWidget-nowPlaying,
+.main-nowPlayingBar-left [data-testid="now-playing-widget"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  flex: 0 1 auto !important;
+  margin-right: 4px !important;
+}
+
+.main-nowPlayingBar-left button[data-testid="add-button"],
+.main-nowPlayingBar-left button[aria-label*="Save"],
+.main-nowPlayingBar-left button[aria-label*="Thêm"],
+.main-nowPlayingBar-left button[aria-label*="Add"] {
+  margin-left: 2px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ==========================================================================
+   3. Synchronize Playlist, Album & Artist Pages with Dynamic Background
+   ========================================================================== */
+
+/* Remove any separate solid colored headers in playlist / album pages */
+._ddPhxHdxmpT13IbjTmr,
+.TwBIa7RNOtp1qNK47ORO,
+[data-testid="playlist-page"] div[style*="--background-base"],
+[data-testid="entity-header"] div,
+.NG0KBybUCTo8_SxXHF3N,
+.KiLYXau_zZC4Y6HztjLZ,
+.e1NRR9_lRgRwafa1esSw,
+.yvYdZyDIc9bukbMMn5Qe,
+.skbiXj4RSA0QAr5xDn9P,
+.main-entityHeader-backgroundColor,
+.main-entityHeader-background,
+.main-actionBarBackground-background,
+.main-home-homeHeader,
+.main-home-headerBackground,
+.main-entityHeader-overlay,
+.kflHPd1wGLg8GjJjmpc6,
+section[data-testid="home-page"] > div:first-child,
+.mpXpsL8sGx7xHzYAb5X7,
+.ROGdKZeEnorqVExAOznw,
+[style*="--background-base"],
+[style*="--background-noise"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Home Page Top Shortcut Cards (Frosted Glass) */
+.x0Tk9K1tu0sFwdD5iNF5,
+.NUiqbKHNgjojKGdhEu1c,
+.view-homeShortcutsGrid-shortcut,
+[data-testid="shortcut-item"] {
+  background-color: var(--aura-glass-bg) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-sm) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.x0Tk9K1tu0sFwdD5iNF5:hover,
+.view-homeShortcutsGrid-shortcut:hover,
+[data-testid="shortcut-item"]:hover {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  border-color: var(--aura-glass-border-hover) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Playlist / Album entity header text legibility */
+.main-entityHeader-title,
+.main-entityHeader-metaData,
+[data-testid="entity-header"] h1,
+[data-testid="entity-header"] span,
+[data-testid="entity-header"] p {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Playlist Action Bar (Clean & seamlessly integrated) */
+.main-actionBar-ActionBar,
+.main-actionBar-ActionBarRow {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Tracklist Header & Sticky Stuck Row */
+.main-trackList-trackListHeader,
+.main-trackList-trackListHeaderStuck,
+.main-trackList-trackListHeaderRow,
+.zyugqDUpsiWa8v7oczU1,
+.cJhY7bOAfbdpUsMavIvn,
+.cJhY7bOAfbdpUsMavIvn.zyugqDUpsiWa8v7oczU1,
+.CpEaNOB66nFcZNUZA2wg,
+.n0sUL33idHXYYa9MF_wD,
+.AJAehY5PvDch63k01sHw,
+.xljhkx9cbmxKi0ds5o5e {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.zyugqDUpsiWa8v7oczU1 *,
+.cJhY7bOAfbdpUsMavIvn * {
+  --background-highlight: transparent !important;
+  --background-base: transparent !important;
+  --background-elevated-base: transparent !important;
+}
+
+.main-trackList-trackListRow {
+  border-radius: var(--aura-radius-sm) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  border: 1px solid transparent !important;
+}
+
+.main-trackList-trackListRow:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.main-trackList-trackListRow.main-trackList-selected,
+.main-trackList-trackListRow.main-trackList-selected:hover {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+/* Cards (Playlists, Albums, Artists) */
+.main-card-card,
+[data-testid="card"] {
+  background-color: var(--aura-card-bg) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--aura-card-border) !important;
+  border-radius: var(--aura-radius-md) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.main-card-card:hover,
+[data-testid="card"]:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  border-color: var(--aura-glass-border-hover) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ==========================================================================
+   4. Buttons & Controls Styling (Clean icons, modern pills)
+   ========================================================================== */
+
+/* 4.1 ICON BUTTONS (Shuffle, Repeat, Playback controls, Action bar icons)
+       NO UGLY BOXES! Clean, modern icon controls */
+.player-controls button,
+.main-nowPlayingBar-left button,
+.main-nowPlayingBar-right button,
+.main-nowPlayingBar-center button,
+.main-actionBar-ActionBar button:not(.main-playButton-PlayButton),
+.main-actionBar-ActionBarRow button:not(.main-playButton-PlayButton),
+.main-topBar-historyButtons button,
+button[data-testid="control-button"],
+button[data-testid="context-item-info-wrapper"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--text-subdued) !important;
+  transition: color 0.2s ease, transform 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.player-controls button:hover,
+.main-nowPlayingBar-left button:hover,
+.main-nowPlayingBar-right button:hover,
+.main-nowPlayingBar-center button:hover,
+.main-actionBar-ActionBar button:not(.main-playButton-PlayButton):hover,
+.main-actionBar-ActionBarRow button:not(.main-playButton-PlayButton):hover,
+.main-topBar-historyButtons button:hover {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  transform: scale(1.12) !important;
+}
+
+/* Active states (Shuffle enabled, Repeat enabled, Heart liked) */
+.player-controls button[aria-checked="true"],
+.player-controls button.main-shuffleButton-active,
+.player-controls button.main-repeatButton-active,
+.main-actionBar-ActionBar button[aria-checked="true"],
+.main-actionBar-ActionBar button.main-shuffleButton-active {
+  color: #1ed760 !important;
+  position: relative !important;
+}
+
+.player-controls button[aria-checked="true"]::after,
+.player-controls button.main-shuffleButton-active::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: #1ed760;
+  border-radius: 50%;
+}
+
+/* 4.2 Play/Pause Main Button (Glowing Accent) */
+.main-playButton-PlayButton,
+.main-playPauseButton-button {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.35) !important;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease !important;
+}
+
+.main-playButton-PlayButton:hover,
+.main-playPauseButton-button:hover {
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 26px rgba(255, 255, 255, 0.55) !important;
+}
+
+/* 4.3 Pill & Chip Buttons */
+.main-tag-container,
+.main-filterList-filterButton,
+.e-10860-chip,
+.main-actionButtons-button,
+.main-trackList-customOrderButton,
+[data-testid="filter-chip"] {
+  background-color: var(--aura-glass-button-bg) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-pill) !important;
+  color: #ffffff !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.main-tag-container:hover,
+.main-filterList-filterButton:hover,
+.e-10860-chip:hover,
+.main-actionButtons-button:hover,
+.main-trackList-customOrderButton:hover,
+[data-testid="filter-chip"]:hover {
+  background-color: var(--aura-glass-button-hover) !important;
+  border-color: var(--aura-glass-border-hover) !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15) !important;
+  transform: scale(1.03) !important;
+}
+
+/* Search Bar (Translucent Frosted Pill) */
+.main-globalNav-searchInputContainer,
+.x-searchInput-searchInputInput,
+form[role="search"] input[data-encore-id="formInput"],
+form[role="search"] {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-pill) !important;
+  color: #ffffff !important;
+}
+
+form[role="search"] input[data-encore-id="formInput"]:focus,
+.x-searchInput-searchInputInput:focus {
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Topbar Marketplace Button */
+#spicetify-marketplace-topbar-button button,
+.spicetify-topbar-button button,
+button.custom-navlink {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--text-subdued) !important;
+  transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+#spicetify-marketplace-topbar-button button:hover,
+.spicetify-topbar-button button:hover,
+button.custom-navlink:hover {
+  color: #ffffff !important;
+  transform: scale(1.1) !important;
+}
+
+/* Progress bar & Volume bar */
+.x-progressBar-progressBarBg {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 9999px !important;
+}
+
+.x-progressBar-fillColor {
+  background-color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Context Menus & Popovers */
+.main-contextMenu-menu,
+.e-10860-popover {
+  background-color: rgba(25, 25, 32, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid var(--aura-glass-border) !important;
+  border-radius: var(--aura-radius-md) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Search Results Spacing & Layout */
+[data-testid="search-category-page"],
+.search-searchCategory-categoryGrid {
+  padding-bottom: 90px !important;
+}
+
+/* Home Page Top Filter Chips (All, Music, Podcasts) Clearance */
+.ap_ioWdVFWJkrRicJB8C {
+  top: 16px !important;
+  padding-top: 16px !important;
+}
+
+/* ==========================================================================
+   5. Lyrics Styling & Real-Time Karaoke Progress Wipe in Black
+   ========================================================================== */
+
+/* 5.1 Keep Lyrics Background Transparent to show dynamic animated gradient */
+.Root__lyrics-cinema,
+.main-lyricsCinema-container,
+[data-testid="lyrics-container"],
+.Gs2EwEu259e_Q_vcVyCx,
+.bTVPDNxj8i5NwSziiRvc,
+.qhqhf1yfLsWX261BfCwC,
+.Qq2L06KPRRKMD91JnleG,
+.ey0UVYcBf8FjA9nw6uSw,
+.Uh421XLh0yabNCraXuTm,
+._ddPhxHdxmpT13IbjTmr,
+.TwBIa7RNOtp1qNK47ORO,
+.uMKMbZGYMaHpscceZgNU,
+.uMKMbZGYMaHpscceZgNU *,
+.LCXLlGZ5I8iXtBGq1Kf6,
+.olYlmkWMvKGIz9wnCHVV,
+.f8Gyc3Ce0Zl_XyLWKpn5,
+.MIFE1y7uDW9bAQzLDe_w,
+[data-testid="lyrics-npv-section"],
+.yfipxwhU9kdAzCFj3ITk,
+.ROLsEKX5p0dPiFqXFaSS,
+.sw7dEPMeOFnfAPDqL8DJ,
+.RStWXgUmX9rTgQ1_kPZa,
+.AM_1TpRcG3xR5J1w1nrn,
+.EajoFMaJt__u6OZCyYpQ,
+.JLqet8XYjifvwElAOg2v,
+.Pb9OM7BnosJTdj3KAIWE,
+.uTV4YURRvMgBUEIyJ8di,
+.qOdJkxIqInOIfSRA3LJL,
+.l13swGttKqvdBuv3oS6l,
+.D4HSfwSeUdQ1Nc6IX9IQ,
+.sVA57fPPVPMNO7STKL7s,
+.main-nowPlayingView-lyricsContent,
+.lyrics-lyrics-background,
+.lyrics-lyrics-container,
+.lyrics-lyrics-contentContainer,
+.lyrics-lyrics-contentWrapper {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  --lyrics-color-background: transparent !important;
+  --lyrics-color-active: #ffffff !important;
+  --background-base: transparent !important;
+  --background-elevated-base: transparent !important;
+  --background-highlight: transparent !important;
+}
+
+/* Prevent any scroll node in lyrics from shifting background colors */
+.main-view-container__scroll-node:has([data-testid="lyrics-container"]),
+.main-view-container__scroll-node:has(.lyrics-lyrics-container),
+.main-view-container__scroll-node:has(.Root__lyrics-cinema),
+.main-view-container__scroll-node:has(.bTVPDNxj8i5NwSziiRvc),
+#main-view:has(.bTVPDNxj8i5NwSziiRvc),
+#main-view:has(.uMKMbZGYMaHpscceZgNU),
+[data-testid="lyrics-container"] [style*="background-color"],
+.main-lyricsCinema-container [style*="background-color"],
+.Gs2EwEu259e_Q_vcVyCx [style*="background-color"],
+.lyrics-lyrics-container [style*="background-color"],
+.bTVPDNxj8i5NwSziiRvc [style*="background-color"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.Root__lyrics-cinema,
+.Pb9OM7BnosJTdj3KAIWE,
+.lyrics-lyrics-container,
+.bTVPDNxj8i5NwSziiRvc {
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* Remove default solid gradient overlay & fixed split backgrounds in native lyrics (Spotify DWP) */
+.YcaaSDZAKPOLI5dw6Knt,
+.uMKMbZGYMaHpscceZgNU .YcaaSDZAKPOLI5dw6Knt,
+.uMKMbZGYMaHpscceZgNU > div:first-child:not(.bTVPDNxj8i5NwSziiRvc):not(.t3oVwLPzntUA1IBwH6EZ),
+.Js8eeZY421_5B7PBMMbb,
+.qOdJkxIqInOIfSRA3LJL,
+.I2WIloMMjsBeMaIS8H3v,
+.YEl2ajrRXcGVbsini6NY,
+.mEPiwea_nZvwH3sF3N88,
+.bp988r0Q6Nr3dF2RSCIP,
+.twgsllDqJ3mEv5Alw9rO,
+.aA56W9p9e9O3hIebp8oN {
+  display: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  opacity: 0 !important;
+}
+
+/* Completely remove scrollbars on the right in cinema / lyrics view */
+body.aura-cinema-active .os-scrollbar,
+body.aura-cinema-active .os-scrollbar-vertical,
+body.aura-cinema-active .os-scrollbar-horizontal,
+body.aura-cinema-active [data-testid="lyrics-cinema-view"] .os-scrollbar,
+body.aura-cinema-active .bTVPDNxj8i5NwSziiRvc .os-scrollbar,
+body.aura-cinema-active #main-view .os-scrollbar,
+body.aura-cinema-active #main-view .os-scrollbar-vertical,
+body.aura-cinema-active .main-view-container .os-scrollbar,
+body.aura-cinema-active .main-view-container .os-scrollbar-vertical,
+body.aura-cinema-active ::-webkit-scrollbar,
+.bTVPDNxj8i5NwSziiRvc .os-scrollbar,
+.uMKMbZGYMaHpscceZgNU .os-scrollbar,
+.Root__lyrics-cinema .os-scrollbar,
+[data-testid="lyrics-cinema-view"] .os-scrollbar,
+[data-testid="lyrics-container"] .os-scrollbar {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* 5.2 Lyrics Text Colors & Focus */
+.VJ82jCGUtjX3d2YQSiFA,
+.mzAT53py1LJkDA4izCjN,
+.lyrics-lyricsContent-lyric {
+  margin: 0 !important;
+  margin-bottom: 0px !important;
+  padding: 4px 0 !important;
+  line-height: 1.5 !important;
+  box-sizing: border-box !important;
+}
+
+.VJ82jCGUtjX3d2YQSiFA._bKBKWKkcxcPu19RosFg:not(.aura-lyrics-active):not(._VhzCfoPHl49dzp1MkmI),
+.VJ82jCGUtjX3d2YQSiFA:not(.aura-lyrics-active):not(._VhzCfoPHl49dzp1MkmI),
+.mzAT53py1LJkDA4izCjN:not(.aura-lyrics-active):not(.N6tht_GLY5suoRAtaggy),
+.qrRT38O7gAArS1n8grcl:not(.aura-lyrics-active),
+.lyrics-lyricsContent-lyric:not(.aura-lyrics-active):not(.lyrics-lyricsContent-active),
+.lyrics-lyricsContent-upcoming:not(.aura-lyrics-active),
+.lyrics-lyricsContent-unsynced {
+  color: rgba(255, 255, 255, 0.45) !important;
+  --lyrics-color-inactive: rgba(255, 255, 255, 0.45) !important;
+  opacity: 0.45 !important;
+  transform: scale(0.985) !important;
+  transform-origin: left center !important;
+  transition: transform 0.4s ease !important;
+  will-change: transform;
+}
+
+.VJ82jCGUtjX3d2YQSiFA.iZQcBRDl8sDadq8gg8AF,
+.iZQcBRDl8sDadq8gg8AF,
+.mzAT53py1LJkDA4izCjN.zYNpVrsABjnrvr7ZSJTd,
+.zYNpVrsABjnrvr7ZSJTd,
+.lyrics-lyricsContent-previous {
+  color: rgba(255, 255, 255, 0.32) !important;
+  --lyrics-color-passed: rgba(255, 255, 255, 0.32) !important;
+  opacity: 0.32 !important;
+  transform: scale(0.98) !important;
+  transform-origin: left center !important;
+  transition: transform 0.4s ease !important;
+}
+
+.VJ82jCGUtjX3d2YQSiFA:hover,
+.mzAT53py1LJkDA4izCjN:hover,
+.lyrics-lyricsContent-lyric:hover {
+  color: rgba(255, 255, 255, 0.90) !important;
+  opacity: 0.90 !important;
+}
+
+/* 5.3 Active Lyric Line: Pure White, Soft Floating Scale */
+.VJ82jCGUtjX3d2YQSiFA.aura-lyrics-active,
+.mzAT53py1LJkDA4izCjN.aura-lyrics-active,
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI,
+._VhzCfoPHl49dzp1MkmI,
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy,
+.lyrics-lyricsContent-active,
+.aura-lyrics-active {
+  position: relative !important;
+  color: #ffffff !important;
+  --lyrics-color-active: #ffffff !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+  transform: scale(1.035) !important;
+  transform-origin: left center !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow: visible !important;
+}
+
+/* 5.4 Real-time Black Karaoke Wipe tracking current sung duration (Sequential line-by-line) */
+.aura-lyric-line {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: inherit !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-image: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  will-change: background-image;
+}
+
+/* Upcoming sub-lines: 100% pure white, ZERO black gradient bleed */
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="upcoming"],
+._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="upcoming"],
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .aura-lyric-line[data-line-state="upcoming"],
+.lyrics-lyricsContent-active .aura-lyric-line[data-line-state="upcoming"],
+.aura-lyrics-active .aura-lyric-line[data-line-state="upcoming"],
+.aura-lyric-line[data-line-state="upcoming"] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-image: none !important;
+}
+
+/* Active line waiting to be sung: 100% pure white, ZERO black smudge or bleed */
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="active"][data-line-sweeping="false"],
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="active"]:not([data-line-sweeping="true"]),
+._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="active"][data-line-sweeping="false"],
+._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="active"]:not([data-line-sweeping="true"]),
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .aura-lyric-line[data-line-state="active"][data-line-sweeping="false"],
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .aura-lyric-line[data-line-state="active"]:not([data-line-sweeping="true"]),
+.lyrics-lyricsContent-active .aura-lyric-line[data-line-state="active"][data-line-sweeping="false"],
+.lyrics-lyricsContent-active .aura-lyric-line[data-line-state="active"]:not([data-line-sweeping="true"]),
+.aura-lyrics-active .aura-lyric-line[data-line-state="active"][data-line-sweeping="false"],
+.aura-lyrics-active .aura-lyric-line[data-line-state="active"]:not([data-line-sweeping="true"]),
+.aura-lyric-line[data-line-state="active"][data-line-sweeping="false"],
+.aura-lyric-line[data-line-state="active"]:not([data-line-sweeping="true"]),
+.aura-lyric-line[data-line-state="active"][style*="--aura-line-progress: 0%"],
+.aura-lyric-line[data-line-state="active"][style*="--aura-line-progress: 0.0%"],
+.aura-lyric-line[data-line-state="active"]:not([style*="--aura-line-progress"]) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-image: none !important;
+}
+
+/* Active line being sung: smooth black wipe from left to right strictly during playback */
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="active"][data-line-sweeping="true"],
+._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="active"][data-line-sweeping="true"],
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .aura-lyric-line[data-line-state="active"][data-line-sweeping="true"],
+.lyrics-lyricsContent-active .aura-lyric-line[data-line-state="active"][data-line-sweeping="true"],
+.aura-lyrics-active .aura-lyric-line[data-line-state="active"][data-line-sweeping="true"],
+.aura-lyric-line[data-line-state="active"][data-line-sweeping="true"] {
+  background-image: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 var(--aura-line-progress, 0%),
+    rgba(35, 35, 35, 0.95) calc(var(--aura-line-progress, 0%) + 0.3%),
+    #ffffff calc(var(--aura-line-progress, 0%) + 0.7%),
+    #ffffff 100%
+  ) !important;
+  background-size: 100% 100% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Passed sub-lines in active line: 100% solid black */
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="passed"],
+._VhzCfoPHl49dzp1MkmI .aura-lyric-line[data-line-state="passed"],
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .aura-lyric-line[data-line-state="passed"],
+.lyrics-lyricsContent-active .aura-lyric-line[data-line-state="passed"],
+.aura-lyrics-active .aura-lyric-line[data-line-state="passed"],
+.aura-lyric-line[data-line-state="passed"] {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  background-image: none !important;
+  transform: scale(1) !important;
+}
+
+/* Passed lines in past lyrics: Dimmed translucent white */
+.VJ82jCGUtjX3d2YQSiFA.iZQcBRDl8sDadq8gg8AF .aura-lyric-line,
+.iZQcBRDl8sDadq8gg8AF .aura-lyric-line,
+.mzAT53py1LJkDA4izCjN.zYNpVrsABjnrvr7ZSJTd .aura-lyric-line,
+.zYNpVrsABjnrvr7ZSJTd .aura-lyric-line,
+.lyrics-lyricsContent-previous .aura-lyric-line {
+  color: rgba(255, 255, 255, 0.32) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.32) !important;
+  background-image: none !important;
+  transform: scale(1) !important;
+}
+
+/* Fallback for active line container when not split into separate lines */
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .LFG5utG7LPiCVtel1IZQ:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI > div:first-child:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+._VhzCfoPHl49dzp1MkmI .LFG5utG7LPiCVtel1IZQ:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .C8vlCbXzAR7qEMsoQG1r:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy > div:first-child:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+.lyrics-lyricsContent-active .lyrics-lyricsContent-text:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+.aura-lyrics-active .C8vlCbXzAR7qEMsoQG1r:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]),
+.aura-lyrics-active > div:first-child:not([data-aura-prepared="true"]):not([data-line-sweeping="true"]) {
+  display: block !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-image: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI .LFG5utG7LPiCVtel1IZQ:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+.VJ82jCGUtjX3d2YQSiFA._VhzCfoPHl49dzp1MkmI > div:first-child:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+._VhzCfoPHl49dzp1MkmI .LFG5utG7LPiCVtel1IZQ:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy .C8vlCbXzAR7qEMsoQG1r:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+.mzAT53py1LJkDA4izCjN.N6tht_GLY5suoRAtaggy > div:first-child:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+.lyrics-lyricsContent-active .lyrics-lyricsContent-text:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+.aura-lyrics-active .C8vlCbXzAR7qEMsoQG1r:not([data-aura-prepared="true"])[data-line-sweeping="true"],
+.aura-lyrics-active > div:first-child:not([data-aura-prepared="true"])[data-line-sweeping="true"] {
+  display: block !important;
+  font-weight: 700 !important;
+  background-image: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 var(--aura-lyrics-progress, 0%),
+    rgba(35, 35, 35, 0.95) calc(var(--aura-lyrics-progress, 0%) + 0.3%),
+    #ffffff calc(var(--aura-lyrics-progress, 0%) + 0.7%),
+    #ffffff 100%
+  ) !important;
+  background-size: 100% 100% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  filter: none !important;
+  text-shadow: none !important;
+  will-change: background-image;
+}
+
+.LFG5utG7LPiCVtel1IZQ[data-aura-prepared="true"],
+.C8vlCbXzAR7qEMsoQG1r[data-aura-prepared="true"] {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+/* Completely remove any pseudo-elements */
+.VJ82jCGUtjX3d2YQSiFA::before,
+.VJ82jCGUtjX3d2YQSiFA::after,
+._VhzCfoPHl49dzp1MkmI::before,
+._VhzCfoPHl49dzp1MkmI::after,
+.LFG5utG7LPiCVtel1IZQ::before,
+.LFG5utG7LPiCVtel1IZQ::after,
+.mzAT53py1LJkDA4izCjN::before,
+.mzAT53py1LJkDA4izCjN::after,
+.lyrics-lyricsContent-lyric::before,
+.lyrics-lyricsContent-lyric::after,
+.lyrics-lyricsContent-active::before,
+.lyrics-lyricsContent-active::after,
+.aura-lyrics-active::before,
+.aura-lyrics-active::after,
+.aura-lyric-line::before,
+.aura-lyric-line::after,
+.C8vlCbXzAR7qEMsoQG1r::before,
+.C8vlCbXzAR7qEMsoQG1r::after {
+  display: none !important;
+  content: none !important;
+}
+
+
+/* 5.5 Cinema Lyrics: Hide sidebars and remove surrounding panel borders */
+body.aura-cinema-active .Root__nav-bar,
+body.aura-cinema-active .bQsutxbyIOatthweRHfK,
+body.aura-cinema-active [data-testid="left-sidebar"],
+body.aura-cinema-active #Desktop_LeftSidebar_Id,
+body.aura-cinema-active .Root__right-sidebar,
+body.aura-cinema-active .AOAgML4d2nmdGZhmu3QM,
+body.aura-cinema-active aside#Desktop_PanelContainer_Id,
+body.aura-cinema-active [data-npv-root="true"],
+body.aura-cinema-active ._PCtpBj8KAibsMRyofjJ,
+body.aura-cinema-active .tDwxpCRHu3TEG0d_5KfE,
+body.aura-cinema-active .iZl4hCeW2xyCCK5nSCCL,
+body.aura-cinema-active .lcI9OvBhlqmTGtESEz3_ {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.aura-cinema-active .bokji1jrN2MBe7RA0384 {
+  grid-template-columns: 0px 1fr 0px !important;
+}
+
+body.aura-cinema-active .Root__main-view,
+body.aura-cinema-active .bTgBWvuzt0s_dQWLj2OL,
+body.aura-cinema-active #main-view,
+body.aura-cinema-active .main-view-container,
+body.aura-cinema-active .Root__top-container,
+body.aura-cinema-active .Gs2EwEu259e_Q_vcVyCx,
+body.aura-cinema-active .Root__lyrics-cinema,
+body.aura-cinema-active #lyrics-cinema {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 5.6 Auto-hide Player Bar, Top Navigation & all frames when idle in Cinema Lyrics */
+body[data-cinema-idle="true"] {
+  cursor: none !important;
+}
+
+.main-nowPlayingBar-container.A9KbWJozYIYOdkeqQgLM,
+.z0qdvwslOFVOAihShLIq:has(.A9KbWJozYIYOdkeqQgLM),
+body.aura-cinema-active .A9KbWJozYIYOdkeqQgLM,
+body[data-cinema-idle="true"] .z0qdvwslOFVOAihShLIq,
+body[data-cinema-idle="true"] .Root__now-playing-bar,
+body[data-cinema-idle="true"] .L5dM7nzQpMJtRkvZZBZL,
+body[data-cinema-idle="true"] .main-nowPlayingBar-container,
+body[data-cinema-idle="true"] .n6XE6JL2UDeFogzbLcNC,
+body[data-cinema-idle="true"] footer,
+body[data-cinema-idle="true"] aside[data-testid="now-playing-bar"],
+body[data-cinema-idle="true"] footer[data-testid="now-playing-bar"],
+body[data-cinema-idle="true"] .Root__globalNav,
+body[data-cinema-idle="true"] .main-topBar-container,
+body[data-cinema-idle="true"] #global-nav-bar,
+body[data-cinema-idle="true"] .Root__nav-bar,
+body[data-cinema-idle="true"] #Desktop_LeftSidebar_Id,
+body[data-cinema-idle="true"] aside#Desktop_PanelContainer_Id {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: opacity 0.4s ease, visibility 0.4s ease !important;
+}
+
+/* ==========================================================================
+   6. Custom Scrollbar Styling
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 9999px !important;
+  border: 2px solid transparent !important;
+  background-clip: content-box !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  background-clip: content-box !important;
+}
+
+/* ==========================================================================
+   7. Right Sidebar Vinyl Record Integration (Only Right Sidebar)
+   ========================================================================== */
+
+/* Fallback vinyl variables if Vinyl extension is not active */
+:root {
+  --aura-vinyl-duration: 18s;
+  --aura-vinyl-play-state: running;
+  --aura-vinyl-shine: conic-gradient(
+    from 15deg,
+    transparent 0deg,
+    rgba(255, 255, 255, 0.16) 45deg,
+    transparent 90deg,
+    transparent 180deg,
+    rgba(255, 255, 255, 0.16) 225deg,
+    transparent 270deg,
+    transparent 360deg
+  );
+  --aura-vinyl-groove: repeating-radial-gradient(
+    circle at 50% 50%,
+    transparent 0px 4px,
+    rgba(255, 255, 255, 0.04) 4px 5px,
+    transparent 5px 9px,
+    rgba(255, 255, 255, 0.03) 9px 10px
+  );
+  --aura-vinyl-base: radial-gradient(
+    circle at 50% 50%,
+    #18181c 0%,
+    #0e0e11 60%,
+    #050507 100%
+  );
+}
+
+@keyframes rotate-vinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Center and frame the vinyl container in Right Sidebar */
+.AOAgML4d2nmdGZhmu3QM .AfKmrZ306qeQTbYQfwLc,
+.Root__right-sidebar .AfKmrZ306qeQTbYQfwLc,
+aside#Desktop_PanelContainer_Id .caAOfYXiCAm8Vhi8McGl,
+[data-npv-root="true"] .caAOfYXiCAm8Vhi8McGl {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  padding: 24px 0 20px 0 !important;
+  height: auto !important;
+  min-height: 270px !important;
+  background: transparent !important;
+}
+
+.AOAgML4d2nmdGZhmu3QM .BGdcsJhkf4JOCIGu5one,
+.AOAgML4d2nmdGZhmu3QM .p0UCDR70bGAS2xsqZuTq,
+.AOAgML4d2nmdGZhmu3QM .Z13iYQYK741oZFGrOjGx,
+.Root__right-sidebar .BGdcsJhkf4JOCIGu5one,
+.Root__right-sidebar .p0UCDR70bGAS2xsqZuTq,
+.Root__right-sidebar .Z13iYQYK741oZFGrOjGx,
+aside#Desktop_PanelContainer_Id .IrcQAOkX1QTj6dhQVcxa,
+aside#Desktop_PanelContainer_Id .Rb19rtvLcmfLGpla5mbY,
+aside#Desktop_PanelContainer_Id .sK71qB4fSRlfYM9lVwjF,
+[data-npv-root="true"] .IrcQAOkX1QTj6dhQVcxa,
+[data-npv-root="true"] .Rb19rtvLcmfLGpla5mbY,
+[data-npv-root="true"] .sK71qB4fSRlfYM9lVwjF {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+/* Vinyl Disc: Center Album Art as Label + Outer Grooves */
+.AOAgML4d2nmdGZhmu3QM [data-testid="cover-drop-target"],
+.Root__right-sidebar [data-testid="cover-drop-target"],
+aside#Desktop_PanelContainer_Id [data-testid="cover-art-slot"],
+[data-npv-root="true"] [data-testid="cover-art-slot"] {
+  width: 130px !important;
+  height: 130px !important;
+  position: relative !important;
+  border-radius: 50% !important;
+  margin: 55px auto !important;
+  animation: rotate-vinyl var(--vinyl-duration, var(--aura-vinyl-duration)) linear infinite var(--vinyl-play-state, var(--aura-vinyl-play-state)) !important;
+  will-change: transform !important;
+}
+
+/* Outer Vinyl Disc with grooves & shine */
+.AOAgML4d2nmdGZhmu3QM [data-testid="cover-drop-target"]::before,
+.Root__right-sidebar [data-testid="cover-drop-target"]::before,
+aside#Desktop_PanelContainer_Id [data-testid="cover-art-slot"]::before,
+[data-npv-root="true"] [data-testid="cover-art-slot"]::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  transform: scale(1.85) !important;
+  background: var(--vinyl-shine, var(--aura-vinyl-shine)),
+              var(--vinyl-groove, var(--aura-vinyl-groove)),
+              var(--vinyl-base, var(--aura-vinyl-base)) !important;
+  box-shadow: 0 0 6px var(--vinyl-shadow-inset, #0a0a0a) inset,
+              0 6px 28px rgba(0, 0, 0, 0.65) !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Inner Album Art Circle (Vinyl Label) */
+.AOAgML4d2nmdGZhmu3QM [data-testid="cover-drop-target"] a,
+.AOAgML4d2nmdGZhmu3QM [data-testid="cover-drop-target"] .jjxyem1Ywsx_bfOoMaa4,
+.Root__right-sidebar [data-testid="cover-drop-target"] a,
+.Root__right-sidebar [data-testid="cover-drop-target"] .jjxyem1Ywsx_bfOoMaa4,
+aside#Desktop_PanelContainer_Id [data-testid="cover-art-slot"] a,
+aside#Desktop_PanelContainer_Id [data-testid="cover-art-slot"] .DEk1nWrwWAPV8PjW3qBy,
+[data-npv-root="true"] [data-testid="cover-art-slot"] a,
+[data-npv-root="true"] [data-testid="cover-art-slot"] .DEk1nWrwWAPV8PjW3qBy {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: block !important;
+  z-index: 1 !important;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5) inset !important;
+}
+
+.AOAgML4d2nmdGZhmu3QM [data-testid="cover-drop-target"] img,
+.Root__right-sidebar [data-testid="cover-drop-target"] img,
+aside#Desktop_PanelContainer_Id [data-testid="cover-art-slot"] img,
+[data-npv-root="true"] [data-testid="cover-art-slot"] img {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* Spindle Center Hole */
+.AOAgML4d2nmdGZhmu3QM [data-testid="cover-drop-target"]::after,
+.Root__right-sidebar [data-testid="cover-drop-target"]::after,
+aside#Desktop_PanelContainer_Id [data-testid="cover-art-slot"]::after,
+[data-npv-root="true"] [data-testid="cover-art-slot"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background-color: var(--aura-color-dark, #0a0a0f) !important;
+  border: 2px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.9) inset !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
