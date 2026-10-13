@@ -1,19 +1,22 @@
 {
   "name": "AuraGlass",
-  "description": "Dynamic frosted glassmorphism theme with synced karaoke lyrics and vinyl player.",
+  "description": "Glassmorphism theme with smooth lyrics and frosted blur effects",
   "preview": "preview.png",
-  "main": "user.css",
+  "readme": "README.md",
   "usercss": "user.css",
   "schemes": "color.ini",
   "include": [
     "theme.js"
   ],
-  "readme": "README.md",
   "authors": [
     {
       "name": "gphucss",
       "url": "https://github.com/Rin9g"
     }
   ],
-  "tags": ["glass"]
+  "tags": [
+    "glassmorphism",
+    "latest",
+    "lyrics"
+  ]
 }
